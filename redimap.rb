@@ -1,1 +1,2 @@
-require './redimap/version'
+require './redimap/config'
+require './redimap/core'
