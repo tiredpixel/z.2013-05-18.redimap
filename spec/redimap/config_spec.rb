@@ -12,6 +12,14 @@ describe Redimap::Config do
     it "imap_port should default to 993" do
       @config.imap_port.should == 993
     end
+    
+    it "redis_url should default to redis://127.0.0.1:6379/0" do
+      @config.redis_url.should == "redis://127.0.0.1:6379/0"
+    end
+    
+    it "redis_ns_queue should default to resque" do
+      @config.redis_ns_queue.should == "resque"
+    end
   end
   
   context "Non-defaults" do
@@ -20,6 +28,8 @@ describe Redimap::Config do
       ENV.stub(:[]).with("IMAP_PORT").and_return(666)
       ENV.stub(:[]).with("IMAP_USERNAME").and_return("Pachelbel")
       ENV.stub(:[]).with("IMAP_PASSWORD").and_return("Canon")
+      ENV.stub(:[]).with("REDIS_URL").and_return("redis://127.0.0.1:6379/1")
+      ENV.stub(:[]).with("REDIS_NS_QUEUE").and_return("sidekiq")
       
       @config = Redimap::Config.new
     end
@@ -38,6 +48,14 @@ describe Redimap::Config do
     
     it "imap_password should get set from IMAP_PASSWORD" do
       @config.imap_password.should == "Canon"
+    end
+    
+    it "redis_url should get set from REDIS_URL" do
+      @config.redis_url.should == "redis://127.0.0.1:6379/1"
+    end
+    
+    it "redis_ns_queue should get set from REDIS_NS_QUEUE" do
+      @config.redis_ns_queue.should == "sidekiq"
     end
   end
   
