@@ -2,7 +2,7 @@ require 'net/imap'
 
 require 'spec_helper'
 
-describe Redimap::IMAP do
+describe Redimap::ImapConn do
   
   before(:each) do
     @fake_net_imap = double(Net::IMAP)
@@ -14,11 +14,11 @@ describe Redimap::IMAP do
   
   context "#initialize" do
     it "should set imap as Net::IMAP" do
-      Redimap::IMAP.new.imap.should == @fake_net_imap
+      Redimap::ImapConn.new.imap.should == @fake_net_imap
     end
     
     it "should #close when block" do
-      Redimap::IMAP.new do |imap|
+      Redimap::ImapConn.new do |imap|
         imap.should_receive(:close)
       end
     end
@@ -26,7 +26,7 @@ describe Redimap::IMAP do
   
   context "#close" do
     before(:each) do
-      @imap = Redimap::IMAP.new
+      @imap = Redimap::ImapConn.new
     end
     
     it "should disconnect from IMAP" do

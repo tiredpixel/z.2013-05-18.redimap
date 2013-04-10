@@ -2,7 +2,7 @@ require 'net/imap'
 
 
 module Redimap
-  class IMAP
+  class ImapConn
     
     attr_accessor :imap
     
