@@ -15,6 +15,8 @@ module Redimap
     attr_reader :redis_ns_redimap
     attr_reader :redis_ns_queue
     
+    attr_reader :polling_interval
+    
     def initialize
       @imap_host     = ENV['IMAP_HOST']
       @imap_port     = ENV['IMAP_PORT']     || 993
@@ -26,6 +28,8 @@ module Redimap
       @redis_url        = ENV['REDIS_URL']        || "redis://127.0.0.1:6379/0"
       @redis_ns_redimap = ENV['REDIS_NS_REDIMAP'] || "redimap"
       @redis_ns_queue   = ENV['REDIS_NS_QUEUE']   || "resque"
+      
+      @polling_interval = ENV['POLLING_INTERVAL'].to_i || 60
     end
     
   end

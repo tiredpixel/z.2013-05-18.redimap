@@ -28,6 +28,10 @@ describe Redimap::Config do
     it "redis_ns_queue should default to resque" do
       @config.redis_ns_queue.should == "resque"
     end
+    
+    it "redis_ns_queue should default to 60 seconds" do
+      @config.polling_interval.should == 60
+    end
   end
   
   context "Non-defaults" do
@@ -40,6 +44,7 @@ describe Redimap::Config do
       ENV.stub(:[]).with("REDIS_URL").and_return("redis://127.0.0.1:6379/1")
       ENV.stub(:[]).with("REDIS_NS_REDIMAP").and_return("brekyread")
       ENV.stub(:[]).with("REDIS_NS_QUEUE").and_return("sidekiq")
+      ENV.stub(:[]).with("POLLING_INTERVAL").and_return(300)
       
       @config = Redimap::Config.new
     end
@@ -74,6 +79,10 @@ describe Redimap::Config do
     
     it "redis_ns_queue should get set from REDIS_NS_QUEUE" do
       @config.redis_ns_queue.should == "sidekiq"
+    end
+    
+    it "polling_interval should get set from POLLING_INTERVAL" do
+      @config.polling_interval.should == 300
     end
   end
   
