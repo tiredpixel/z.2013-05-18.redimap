@@ -1,0 +1,16 @@
+#!/usr/bin/env ruby
+
+require File.expand_path(File.dirname(__FILE__) + '/../lib/redimap')
+
+
+running = true
+
+while running
+  Redimap.read_mailboxes
+  
+  if ARGV[0].to_i == 1 # Oh so crude.
+    sleep Redimap.config.polling_interval # Sleep awhile.
+  else
+    running = false
+  end
+end
