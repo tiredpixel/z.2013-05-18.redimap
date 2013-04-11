@@ -8,8 +8,11 @@ Gem::Specification.new do |spec|
   spec.version       = Redimap::VERSION
   spec.authors       = ["tiredpixel"]
   spec.email         = ["tp@tiredpixel.com"]
-  spec.description   = %q{TODO: Write a gem description}
-  spec.summary       = %q{TODO: Write a gem summary}
+  spec.description   = %q{Redimap provides a simple executable for polling mailboxes
+    within an IMAP account. It keeps track of what it's seen using Redis. For new
+    messages, the mailbox and uid are queued in Redis. The format used should be
+    compatible with Resque.}
+  spec.summary       = %q{Redimap polls IMAP account mailboxes and queues in Redis.}
   spec.homepage      = ""
   spec.license       = "MIT"
   
