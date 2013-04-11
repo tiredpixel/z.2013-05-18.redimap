@@ -29,7 +29,7 @@ module Redimap
       @redis_ns_redimap = ENV['REDIS_NS_REDIMAP'] || "redimap"
       @redis_ns_queue   = ENV['REDIS_NS_QUEUE']   || "resque"
       
-      @polling_interval = ENV['POLLING_INTERVAL'].to_i || 60
+      @polling_interval = (ENV['POLLING_INTERVAL'] || 60).to_i
     end
     
   end
