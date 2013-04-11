@@ -1,7 +1,5 @@
 module Redimap
   
-  VERSION = "0.0.1"
-  
   def self.config
     @config ||= Redimap::Config.new
   end
