@@ -28,14 +28,14 @@ module Redimap
     
     def get_mailbox_uid(mailbox)
       @redis.hget(
-        "#{Redimap.config.redis_ns_queue}:mailboxes",
+        "#{Redimap.config.redis_ns_redimap}:mailboxes",
         mailbox
       ).to_i # Also handles nil.
     end
     
     def set_mailbox_uid(mailbox, uid)
       @redis.hset(
-        "#{Redimap.config.redis_ns_queue}:mailboxes",
+        "#{Redimap.config.redis_ns_redimap}:mailboxes",
         mailbox,
         uid
       )

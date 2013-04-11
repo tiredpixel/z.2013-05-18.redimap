@@ -13,6 +13,10 @@ describe Redimap::Config do
       @config.imap_port.should == 993
     end
     
+    it "imap_mailboxes should default to [INBOX]" do
+      @config.imap_mailboxes.should == ['INBOX']
+    end
+    
     it "redis_url should default to redis://127.0.0.1:6379/0" do
       @config.redis_url.should == "redis://127.0.0.1:6379/0"
     end
@@ -32,6 +36,7 @@ describe Redimap::Config do
       ENV.stub(:[]).with("IMAP_PORT").and_return(666)
       ENV.stub(:[]).with("IMAP_USERNAME").and_return("Pachelbel")
       ENV.stub(:[]).with("IMAP_PASSWORD").and_return("Canon")
+      ENV.stub(:[]).with("IMAP_MAILBOXES").and_return('["INBOX","SENT"]')
       ENV.stub(:[]).with("REDIS_URL").and_return("redis://127.0.0.1:6379/1")
       ENV.stub(:[]).with("REDIS_NS_REDIMAP").and_return("brekyread")
       ENV.stub(:[]).with("REDIS_NS_QUEUE").and_return("sidekiq")
@@ -53,6 +58,10 @@ describe Redimap::Config do
     
     it "imap_password should get set from IMAP_PASSWORD" do
       @config.imap_password.should == "Canon"
+    end
+    
+    it "imap_mailboxes should get set from IMAP_MAILBOXES" do
+      @config.imap_mailboxes.should == ['INBOX', 'SENT']
     end
     
     it "redis_url should get set from REDIS_URL" do
