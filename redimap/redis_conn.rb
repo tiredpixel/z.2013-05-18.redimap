@@ -26,6 +26,21 @@ module Redimap
       end
     end
     
+    def get_mailbox_uid(mailbox)
+      @redis.hget(
+        "#{Redimap.config.redis_ns_queue}:mailboxes",
+        mailbox
+      ).to_i # Also handles nil.
+    end
+    
+    def set_mailbox_uid(mailbox, uid)
+      @redis.hset(
+        "#{Redimap.config.redis_ns_queue}:mailboxes",
+        mailbox,
+        uid
+      )
+    end
+    
     def queue_mailbox_uid(mailbox, uid)
       @redis.sadd(
         "#{Redimap.config.redis_ns_queue}:queues",
