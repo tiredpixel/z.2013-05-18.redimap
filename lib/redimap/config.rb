@@ -4,18 +4,18 @@ require 'json'
 module Redimap
   class Config
     
-    attr_reader :imap_host
-    attr_reader :imap_port
-    attr_reader :imap_username
-    attr_reader :imap_password
+    attr_accessor :imap_host
+    attr_accessor :imap_port
+    attr_accessor :imap_username
+    attr_accessor :imap_password
     
-    attr_reader :imap_mailboxes
+    attr_accessor :imap_mailboxes
     
-    attr_reader :redis_url
-    attr_reader :redis_ns_redimap
-    attr_reader :redis_ns_queue
+    attr_accessor :redis_url
+    attr_accessor :redis_ns_redimap
+    attr_accessor :redis_ns_queue
     
-    attr_reader :polling_interval
+    attr_accessor :polling_interval
     
     def initialize
       @imap_host     = ENV['IMAP_HOST']
