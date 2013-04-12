@@ -20,14 +20,10 @@ end.parse!
 
 # = Main loop
 
-running = true
-
-while running
+loop do
   Redimap.queue_new_mailboxes_uids
   
-  if options[:eternal]
-    sleep Redimap.config.polling_interval # Sleep awhile.
-  else
-    running = false
-  end
+  break unless options[:eternal]
+  
+  sleep Redimap.config.polling_interval # Sleep awhile.
 end
