@@ -8,8 +8,6 @@ module Redimap
     @@RESCUE_QUEUE = 'redimap'
     @@RESCUE_CLASS = 'RedimapJob'
     
-    attr_accessor :redis
-    
     def initialize
       @redis = Redis.connect(:url => Redimap.config.redis_url)
       

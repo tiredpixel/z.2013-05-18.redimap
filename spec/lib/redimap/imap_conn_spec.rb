@@ -15,7 +15,7 @@ describe Redimap::ImapConn do
   
   context "#initialize" do
     it "should set imap as Net::IMAP" do
-      Redimap::ImapConn.new.imap.should == @fake_net_imap
+      Redimap::ImapConn.new.instance_variable_get('@imap').should == @fake_net_imap
     end
     
     it "should #close when block" do
@@ -28,20 +28,22 @@ describe Redimap::ImapConn do
   context "#close" do
     before(:each) do
       @imap = Redimap::ImapConn.new
+      
+      @imap_imap = @imap.instance_variable_get('@imap')
     end
     
     it "should disconnect from IMAP" do
-      @imap.imap.stub(:logout)
+      @imap_imap.stub(:logout)
       
-      @imap.imap.should_receive(:disconnect)
+      @imap_imap.should_receive(:disconnect)
       
       @imap.close
     end
     
     it "should logout from IMAP" do
-      @imap.imap.stub(:disconnect)
+      @imap_imap.stub(:disconnect)
       
-      @imap.imap.should_receive(:logout)
+      @imap_imap.should_receive(:logout)
       
       @imap.close
     end
