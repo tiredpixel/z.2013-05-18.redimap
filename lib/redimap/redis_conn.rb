@@ -43,12 +43,16 @@ module Redimap
     def queue_mailbox_uid(mailbox, uid)
       @redis.sadd(@KEYS[:rescue_queues], @@RESCUE_QUEUE)
       
-      payload = {
+      @redis.rpush(@KEYS[:rescue_queue_redimap], payload(mailbox, uid))
+    end
+    
+    private
+    
+    def payload(mailbox, uid)
+      {
         :class => @@RESCUE_CLASS,
         :args  => [mailbox, uid]
       }.to_json
-      
-      @redis.rpush(@KEYS[:rescue_queue_redimap], payload)
     end
     
   end
