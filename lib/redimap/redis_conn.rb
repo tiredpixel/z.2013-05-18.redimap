@@ -1,5 +1,6 @@
 require 'redis'
 require 'json'
+require 'securerandom'
 
 
 module Redimap
@@ -48,8 +49,13 @@ module Redimap
     
     def payload(mailbox, uid)
       {
+        # resque
         :class => @@RESCUE_CLASS,
-        :args  => [mailbox, uid]
+        :args  => [mailbox, uid],
+        # sidekiq (extra)
+        :queue => @@RESCUE_QUEUE,
+        :retry => true,
+        :jid   => SecureRandom.hex(12),
       }.to_json
     end
     
