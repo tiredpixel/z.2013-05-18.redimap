@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+
 describe Redimap::Config do
   
   context "Defaults" do

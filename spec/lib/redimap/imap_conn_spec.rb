@@ -2,6 +2,7 @@ require 'net/imap'
 
 require 'spec_helper'
 
+
 describe Redimap::ImapConn do
   
   before(:each) do

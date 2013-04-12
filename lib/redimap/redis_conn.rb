@@ -33,35 +33,22 @@ module Redimap
     end
     
     def get_mailbox_uid(mailbox)
-      @redis.hget(
-        @KEYS[:redimap_mailboxes],
-        mailbox
-      ).to_i # Also handles nil.
+      @redis.hget(@KEYS[:redimap_mailboxes], mailbox).to_i # Also handles nil.
     end
     
     def set_mailbox_uid(mailbox, uid)
-      @redis.hset(
-        @KEYS[:redimap_mailboxes],
-        mailbox,
-        uid
-      )
+      @redis.hset(@KEYS[:redimap_mailboxes], mailbox, uid)
     end
     
     def queue_mailbox_uid(mailbox, uid)
-      @redis.sadd(
-        @KEYS[:rescue_queues],
-        @@RESCUE_QUEUE
-      )
+      @redis.sadd(@KEYS[:rescue_queues], @@RESCUE_QUEUE)
       
       payload = {
         :class => @@RESCUE_CLASS,
         :args  => [mailbox, uid]
       }.to_json
       
-      @redis.rpush(
-        @KEYS[:rescue_queue_redimap],
-        payload
-      )
+      @redis.rpush(@KEYS[:rescue_queue_redimap], payload)
     end
     
   end
