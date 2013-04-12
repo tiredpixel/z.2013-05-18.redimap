@@ -5,10 +5,10 @@ module Redimap
   end
   
   def self.configure
-    yield config if block_given?
+    yield @config
   end
   
-  def self.read_mailboxes
+  def self.queue_new_mailboxes_uids
     Redimap::ImapConn.new do |imap|
       Redimap::RedisConn.new do |redis|
         Redimap.config.imap_mailboxes.each do |mailbox|

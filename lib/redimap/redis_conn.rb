@@ -1,17 +1,22 @@
 require 'redis'
 require 'json'
+require 'securerandom'
 
 
 module Redimap
   class RedisConn
     
-    QUEUE_QUEUE = 'redimap'
-    QUEUE_CLASS = 'RedimapJob'
-    
-    attr_accessor :redis
+    @@RESCUE_QUEUE = 'redimap'
+    @@RESCUE_CLASS = 'RedimapJob'
     
     def initialize
       @redis = Redis.connect(:url => Redimap.config.redis_url)
+      
+      @KEYS = {
+        :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
+        :rescue_queues        => "#{Redimap.config.redis_ns_queue}:queues",
+        :rescue_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESCUE_QUEUE}",
+      }.freeze
       
       if block_given?
         yield self
@@ -27,35 +32,31 @@ module Redimap
     end
     
     def get_mailbox_uid(mailbox)
-      @redis.hget(
-        "#{Redimap.config.redis_ns_redimap}:mailboxes",
-        mailbox
-      ).to_i # Also handles nil.
+      @redis.hget(@KEYS[:redimap_mailboxes], mailbox).to_i # Also handles nil.
     end
     
     def set_mailbox_uid(mailbox, uid)
-      @redis.hset(
-        "#{Redimap.config.redis_ns_redimap}:mailboxes",
-        mailbox,
-        uid
-      )
+      @redis.hset(@KEYS[:redimap_mailboxes], mailbox, uid)
     end
     
     def queue_mailbox_uid(mailbox, uid)
-      @redis.sadd(
-        "#{Redimap.config.redis_ns_queue}:queues",
-        QUEUE_QUEUE
-      )
+      @redis.sadd(@KEYS[:rescue_queues], @@RESCUE_QUEUE)
       
-      payload = {
-        :class => QUEUE_CLASS,
-        :args  => [mailbox, uid]
+      @redis.rpush(@KEYS[:rescue_queue_redimap], payload(mailbox, uid))
+    end
+    
+    private
+    
+    def payload(mailbox, uid)
+      {
+        # resque
+        :class => @@RESCUE_CLASS,
+        :args  => [mailbox, uid],
+        # sidekiq (extra)
+        :queue => @@RESCUE_QUEUE,
+        :retry => true,
+        :jid   => SecureRandom.hex(12),
       }.to_json
-      
-      @redis.rpush(
-        "#{Redimap.config.redis_ns_queue}:queue:#{QUEUE_QUEUE}",
-        payload
-      )
     end
     
   end
