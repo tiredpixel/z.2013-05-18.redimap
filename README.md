@@ -29,9 +29,9 @@ Check and queue new messages and quit:
 
     $ bundle exec redimap
 
-Check and queue new messages but run for eternity using crude polling:
+Check and queue new messages but run for eternity:
 
-    $ bundle exec redimap 1
+    $ bundle exec redimap --eternal
 
 
 ## Contributions

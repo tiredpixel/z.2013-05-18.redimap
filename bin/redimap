@@ -1,14 +1,31 @@
 #!/usr/bin/env ruby
 
+require 'optparse'
+
 require File.expand_path(File.dirname(__FILE__) + '/../lib/redimap')
 
+
+# = Parse opts
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: redimap [options]"
+  
+  opts.on("-e", "--eternal", "Run eternally") do |e|
+    options[:eternal] = true
+  end
+end.parse!
+
+
+# = Main loop
 
 running = true
 
 while running
   Redimap.queue_new_mailboxes_uids
   
-  if ARGV[0].to_i == 1 # Oh so crude.
+  if options[:eternal]
     sleep Redimap.config.polling_interval # Sleep awhile.
   else
     running = false
