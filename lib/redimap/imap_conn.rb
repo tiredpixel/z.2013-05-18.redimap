@@ -4,8 +4,6 @@ require 'net/imap'
 module Redimap
   class ImapConn
     
-    attr_accessor :imap
-    
     def initialize
       @imap = Net::IMAP.new(Redimap.config.imap_host, {
         :port => Redimap.config.imap_port,
