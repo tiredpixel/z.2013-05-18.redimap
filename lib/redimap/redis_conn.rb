@@ -5,8 +5,8 @@ require 'json'
 module Redimap
   class RedisConn
     
-    QUEUE_QUEUE = 'redimap'
-    QUEUE_CLASS = 'RedimapJob'
+    @@RESCUE_QUEUE = 'redimap'
+    @@RESCUE_CLASS = 'RedimapJob'
     
     attr_accessor :redis
     
@@ -16,7 +16,7 @@ module Redimap
       @KEYS = {
         :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
         :rescue_queues        => "#{Redimap.config.redis_ns_queue}:queues",
-        :rescue_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{QUEUE_QUEUE}",
+        :rescue_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESCUE_QUEUE}",
       }.freeze
       
       if block_given?
@@ -50,11 +50,11 @@ module Redimap
     def queue_mailbox_uid(mailbox, uid)
       @redis.sadd(
         @KEYS[:rescue_queues],
-        QUEUE_QUEUE
+        @@RESCUE_QUEUE
       )
       
       payload = {
-        :class => QUEUE_CLASS,
+        :class => @@RESCUE_CLASS,
         :args  => [mailbox, uid]
       }.to_json
       
