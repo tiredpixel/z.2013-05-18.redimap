@@ -29,7 +29,7 @@ describe Redimap::Config do
       @config.redis_ns_queue.should == "resque"
     end
     
-    it "redis_ns_queue should default to 60 seconds" do
+    it "polling_interval should default to 60 seconds" do
       @config.polling_interval.should == 60
     end
   end
