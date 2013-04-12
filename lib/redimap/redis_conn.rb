@@ -13,6 +13,12 @@ module Redimap
     def initialize
       @redis = Redis.connect(:url => Redimap.config.redis_url)
       
+      @KEYS = {
+        :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
+        :rescue_queues        => "#{Redimap.config.redis_ns_queue}:queues",
+        :rescue_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{QUEUE_QUEUE}",
+      }.freeze
+      
       if block_given?
         yield self
         
@@ -28,14 +34,14 @@ module Redimap
     
     def get_mailbox_uid(mailbox)
       @redis.hget(
-        "#{Redimap.config.redis_ns_redimap}:mailboxes",
+        @KEYS[:redimap_mailboxes],
         mailbox
       ).to_i # Also handles nil.
     end
     
     def set_mailbox_uid(mailbox, uid)
       @redis.hset(
-        "#{Redimap.config.redis_ns_redimap}:mailboxes",
+        @KEYS[:redimap_mailboxes],
         mailbox,
         uid
       )
@@ -43,7 +49,7 @@ module Redimap
     
     def queue_mailbox_uid(mailbox, uid)
       @redis.sadd(
-        "#{Redimap.config.redis_ns_queue}:queues",
+        @KEYS[:rescue_queues],
         QUEUE_QUEUE
       )
       
@@ -53,7 +59,7 @@ module Redimap
       }.to_json
       
       @redis.rpush(
-        "#{Redimap.config.redis_ns_queue}:queue:#{QUEUE_QUEUE}",
+        @KEYS[:rescue_queue_redimap],
         payload
       )
     end
