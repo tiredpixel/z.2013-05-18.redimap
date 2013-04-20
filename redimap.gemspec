@@ -10,10 +10,10 @@ Gem::Specification.new do |spec|
   spec.email         = ["tp@tiredpixel.com"]
   spec.description   = %q{Redimap provides a simple executable for polling mailboxes
     within an IMAP account. It keeps track of what it's seen using Redis. For new
-    messages, the mailbox and uid are queued in Redis. The format used should be
-    compatible with Resque.}
+    messages, the mailbox and uid are queued in Redis. The queue format should be
+    compatible with Resque and Sidekiq.}
   spec.summary       = %q{Redimap polls IMAP account mailboxes and queues in Redis.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/tiredpixel/redimap"
   spec.license       = "MIT"
   
   spec.files         = `git ls-files`.split($/)
