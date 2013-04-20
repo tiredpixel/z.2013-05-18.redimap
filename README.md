@@ -2,8 +2,9 @@
 
 Redimap provides a simple executable for polling mailboxes
 within an IMAP account. It keeps track of what it's seen using Redis. For new
-messages, the mailbox and uid are queued in Redis. The format used should be
-compatible with Resque.
+messages, the mailbox and uid are queued in Redis. The queue format should be
+compatible with [Resque](https://github.com/resque/resque) and
+[Sidekiq](https://github.com/mperham/sidekiq).
 
 More sleep lost by [tiredpixel](http://www.tiredpixel.com).
 

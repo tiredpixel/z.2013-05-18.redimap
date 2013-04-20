@@ -10,7 +10,17 @@ module Redimap
     @@RESCUE_CLASS = 'RedimapJob'
     
     def initialize
-      @redis = Redis.connect(:url => Redimap.config.redis_url)
+      @logger = Redimap.logger
+      
+      begin
+        @redis = Redis.connect(:url => Redimap.config.redis_url)
+        
+        @redis.ping
+      rescue Redis::CannotConnectError => e
+        @logger.error { e.to_s }
+        
+        return
+      end
       
       @KEYS = {
         :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
@@ -26,9 +36,7 @@ module Redimap
     end
     
     def close
-      if @redis
-        @redis.quit
-      end
+      @redis.quit
     end
     
     def get_mailbox_uid(mailbox)

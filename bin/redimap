@@ -4,6 +4,8 @@ require 'optparse'
 
 require File.expand_path(File.dirname(__FILE__) + '/../lib/redimap')
 
+@logger = Redimap.logger
+
 
 # = Parse opts
 
@@ -24,6 +26,8 @@ loop do
   Redimap.queue_new_mailboxes_uids
   
   break unless options[:eternal]
+  
+  @logger.debug { "Snoring for #{Redimap.config.polling_interval} s" }
   
   sleep Redimap.config.polling_interval # Sleep awhile.
 end
