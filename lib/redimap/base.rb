@@ -5,7 +5,7 @@ module Redimap
   end
   
   def self.configure
-    yield @config
+    yield self.config
   end
   
   def self.queue_new_mailboxes_uids
