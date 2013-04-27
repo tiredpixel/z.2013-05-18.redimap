@@ -9,13 +9,15 @@ module Redimap
   
   def self.configure
     yield self.config
+    
+    Redimap.logger.debug { "Configured #{Redimap.config.to_s}" }
   end
   
   def self.logger
     unless @logger
       @logger = Logger.new($stdout)
       
-      @logger.level    = Logger.const_get(ENV['LOG_LEVEL'] || 'INFO')
+      @logger.level    = Logger.const_get(Redimap.config.log_level)
       @logger.progname = :Redimap
     end
     
