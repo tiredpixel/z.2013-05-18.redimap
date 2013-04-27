@@ -6,8 +6,6 @@ require 'optparse'
 
 require File.expand_path(File.dirname(__FILE__) + '/../lib/redimap')
 
-@logger = Redimap.logger
-
 
 # = Parse opts
 
@@ -16,10 +14,94 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: redimap [options]"
   
-  opts.on("-e", "--eternal", "Run eternally") do |e|
-    options[:eternal] = true
+  opts.separator ""
+  opts.separator "Polling:"
+  
+  opts.on("-e", "--[no-]eternal", "Run eternally") do |o|
+    options[:eternal] = o
+  end
+  
+  opts.on("--polling-interval [N]", "Poll every N seconds when --eternal") do |o|
+    options[:polling_interval] = o
+  end
+  
+  opts.separator ""
+  opts.separator "IMAP:"
+  
+  opts.on("-h", "--imap-host HOST", "Connect IMAP with HOST") do |o|
+    options[:imap_host] = o
+  end
+  
+  opts.on("--imap-port [PORT]", Integer, "Connect IMAP with PORT") do |o|
+    options[:imap_port] = o
+  end
+  
+  opts.on("-u", "--imap-username USERNAME", "Connect IMAP with USERNAME") do |o|
+    options[:imap_username] = o
+  end
+  
+  opts.on("-p", "--imap-password PASSWORD", "Connect IMAP with PASSWORD") do |o|
+    options[:imap_password] = o
+  end
+  
+  opts.on("--imap-mailboxes [INBOX,IN]", Array, "Read IMAP MAILBOXES") do |o|
+    options[:imap_mailboxes] = o
+  end
+  
+  opts.separator ""
+  opts.separator "Redis:"
+  
+  opts.on("--redis-url [URL]", "Connect Redis to URL") do |o|
+    options[:redis_url] = o
+  end
+  
+  opts.on("--redis-ns-redimap [NS]", "Namespace Redis 'redimap:' as NS") do |o|
+    options[:redis_ns_redimap] = o
+  end
+  
+  opts.on("--redis-ns-queue [NS]", "Namespace Redis 'resque:' as NS") do |o|
+    options[:redis_ns_queue] = o
+  end
+  
+  opts.separator ""
+  opts.separator "Other:"
+  
+  opts.on("-v", "--[no-]verbose", "Be somewhat verbose") do |o|
+    options[:verbose] = o
+  end
+  
+  opts.on_tail("--help", "Show this message") do
+    puts opts
+    exit
+  end
+  
+  opts.on_tail("--version", "Show version") do
+    puts "Redimap version:#{Redimap::VERSION}"
+    exit
   end
 end.parse!
+
+
+# = Configure
+
+Redimap.configure do |c|
+  c.log_level = 'DEBUG' if options[:verbose]
+  
+  c.imap_host     = options[:imap_host]     if options[:imap_host]
+  c.imap_port     = options[:imap_port]     if options[:imap_port]
+  c.imap_username = options[:imap_username] if options[:imap_username]
+  c.imap_password = options[:imap_password] if options[:imap_password]
+  
+  c.imap_mailboxes = options[:imap_mailboxes] if options[:imap_mailboxes]
+  
+  c.redis_url        = options[:redis_url]        if options[:redis_url]
+  c.redis_ns_redimap = options[:redis_ns_redimap] if options[:redis_ns_redimap]
+  c.redis_ns_queue   = options[:redis_ns_queue]   if options[:redis_ns_queue]
+  
+  c.polling_interval = options[:polling_interval] if options[:polling_interval]
+end
+
+@logger = Redimap.logger
 
 
 # = Main loop
