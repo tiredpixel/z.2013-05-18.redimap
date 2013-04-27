@@ -67,7 +67,7 @@ OptionParser.new do |opts|
   opts.separator "Other:"
   
   opts.on("-v", "--[no-]verbose", "Be somewhat verbose") do |o|
-    options[:verbose] = o
+    options[:log_level] = 'DEBUG'
   end
   
   opts.on_tail("--help", "Show this message") do
@@ -85,20 +85,31 @@ end.parse!
 # = Configure
 
 Redimap.configure do |c|
-  c.log_level = 'DEBUG' if options[:verbose]
-  
-  c.imap_host     = options[:imap_host]     if options[:imap_host]
-  c.imap_port     = options[:imap_port]     if options[:imap_port]
-  c.imap_username = options[:imap_username] if options[:imap_username]
-  c.imap_password = options[:imap_password] if options[:imap_password]
-  
-  c.imap_mailboxes = options[:imap_mailboxes] if options[:imap_mailboxes]
-  
-  c.redis_url        = options[:redis_url]        if options[:redis_url]
-  c.redis_ns_redimap = options[:redis_ns_redimap] if options[:redis_ns_redimap]
-  c.redis_ns_queue   = options[:redis_ns_queue]   if options[:redis_ns_queue]
-  
-  c.polling_interval = options[:polling_interval] if options[:polling_interval]
+  %w[
+    log_level
+    imap_host
+    imap_port
+    imap_username
+    imap_password
+    imap_mailboxes
+    redis_url
+    redis_ns_redimap
+    redis_ns_queue
+    polling_interval
+  ].each do |e_k|
+    e_v = case e_k
+    when 'imap_port'
+      ENV[e_k].to_i
+    when 'imap_mailboxes'
+      ENV[e_k].split(',')
+    else
+      ENV[e_k]
+    end if ENV[e_k] # Read env var if set, parsing as for params.
+    
+    e_v = options[e_k.to_sym] if options[e_k.to_sym] # Override from params.
+    
+    c.instance_variable_set("@#{e_k}", e_v) if e_v # Only set extant settings.
+  end
 end
 
 @logger = Redimap.logger
@@ -109,7 +120,7 @@ end
 loop do
   Redimap.queue_new_mailboxes_uids
   
-  break unless options[:eternal]
+  break unless (options[:eternal] || ENV['eternal'].to_i == 1)
   
   @logger.debug { "Snoring for #{Redimap.config.polling_interval} s" }
   
