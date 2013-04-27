@@ -18,21 +18,17 @@ Install using:
 
 ## Usage
 
-Ensure that you are setting the required environment variables, perhaps using
-Foreman. You'll probably want to at least set:
+View the available options:
 
-    IMAP_HOST=imap.gmail.com
-    IMAP_USERNAME=username@example.com
-    IMAP_PASSWORD=ssssshhhhhhh
-    IMAP_MAILBOXES=["INBOX","Sent"]
+    $ bundle exec redimap --help
+
+Most settings have defaults, but it is necessary to at least set up IMAP.
 
 Check and queue new messages and quit:
 
-    $ bundle exec redimap
+    $ bundle exec redimap --host mail.example.com --user a@example.com --password helpimacarrot
 
-Check and queue new messages but run for eternity:
-
-    $ bundle exec redimap --eternal
+Use `--eternal` to run eternally.
 
 
 ## Contributions
