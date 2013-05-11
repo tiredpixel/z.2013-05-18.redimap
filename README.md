@@ -26,7 +26,7 @@ Most settings have defaults, but it is necessary to at least set up IMAP.
 
 Check and queue new messages and quit:
 
-    $ bundle exec redimap --host mail.example.com --user a@example.com --password helpimacarrot
+    $ bundle exec redimap --imap-host mail.example.com --imap-username a@example.com --imap-password helpimacarrot
 
 Use `--eternal` to run eternally.
 
