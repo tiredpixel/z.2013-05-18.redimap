@@ -28,27 +28,7 @@ Check and queue new messages and quit:
 
     $ bundle exec redimap --host mail.example.com --user a@example.com --password helpimacarrot
 
-It is also possible to set config using environment variables. Command-line
-options override environment variables. Note that environment variables are in
-lowercase, and are named differently to command-line parameters.
-
-    $ imap_host=mail.example.com imap_user=a@example.com imap_password=helpimacarrot bundle exec redimap
-
-The complete list of available environment variables is:
-
-    eternal
-    log_level
-    imap_host
-    imap_port
-    imap_username
-    imap_password
-    imap_mailboxes
-    redis_url
-    redis_ns_redimap
-    redis_ns_queue
-    polling_interval
-
-Use `--eternal` or `eternal=1` to run eternally.
+Use `--eternal` to run eternally.
 
 
 ## Contributions
