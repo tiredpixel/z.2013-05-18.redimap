@@ -3,7 +3,7 @@ require 'minitest/autorun'
 require_relative '../../lib/redimap/version'
 
 
-describe Redimap::VERSION do
+describe "Redimap::VERSION" do
   
   subject { Redimap::VERSION }
   
