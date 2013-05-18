@@ -22,8 +22,8 @@ module Redimap
       
       @KEYS = {
         :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
-        :rescue_queues        => "#{Redimap.config.redis_ns_queue}:queues",
-        :rescue_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESCUE_QUEUE}",
+        :resque_queues        => "#{Redimap.config.redis_ns_queue}:queues",
+        :resque_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESCUE_QUEUE}",
       }.freeze
       
       if block_given?
@@ -46,9 +46,9 @@ module Redimap
     end
     
     def queue_mailbox_uid(mailbox, uid)
-      @redis.sadd(@KEYS[:rescue_queues], @@RESCUE_QUEUE)
+      @redis.sadd(@KEYS[:resque_queues], @@RESCUE_QUEUE)
       
-      @redis.rpush(@KEYS[:rescue_queue_redimap], payload(mailbox, uid))
+      @redis.rpush(@KEYS[:resque_queue_redimap], payload(mailbox, uid))
     end
     
     private
