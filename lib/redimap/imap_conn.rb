@@ -5,8 +5,6 @@ module Redimap
   class ImapConn
     
     def initialize
-      @logger = Redimap.logger
-      
       begin
         @imap = Net::IMAP.new(Redimap.config.imap_host, {
           :port => Redimap.config.imap_port,
@@ -15,7 +13,7 @@ module Redimap
         
         @imap.login(Redimap.config.imap_username, Redimap.config.imap_password)
       rescue Net::IMAP::NoResponseError => e
-        @logger.error { e.to_s }
+        Redimap.logger.error { e.to_s }
         
         return
       end
