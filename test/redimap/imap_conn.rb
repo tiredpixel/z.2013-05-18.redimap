@@ -6,6 +6,15 @@ require_relative '../../lib/redimap/imap_conn'
 
 describe Redimap::ImapConn do
   
+  def imap_conn_new
+    @net_imap = Minitest::Mock.new
+    @net_imap.expect(:login, nil, [nil, nil])
+    
+    Net::IMAP.stub(:new, @net_imap) do
+      @imap_conn = Redimap::ImapConn.new
+    end
+  end
+  
   describe "#initialize" do
     before do
       @config = Redimap::Config.new
@@ -63,12 +72,7 @@ describe Redimap::ImapConn do
   
   describe "#close" do
     before do
-      @net_imap = Minitest::Mock.new
-      @net_imap.expect(:login, nil, [nil, nil])
-      
-      Net::IMAP.stub(:new, @net_imap) do
-        @imap_conn = Redimap::ImapConn.new
-      end
+      imap_conn_new
     end
     
     it "disconnects from mailbox" do
@@ -83,12 +87,7 @@ describe Redimap::ImapConn do
   
   describe "#read_mailbox" do
     before do
-      @net_imap = Minitest::Mock.new
-      @net_imap.expect(:login, nil, [nil, nil])
-      
-      Net::IMAP.stub(:new, @net_imap) do
-        @imap_conn = Redimap::ImapConn.new
-      end
+      imap_conn_new
     end
     
     it "gets all INBOX uids when default" do
