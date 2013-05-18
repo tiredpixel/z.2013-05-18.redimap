@@ -10,14 +10,12 @@ module Redimap
     @@RESCUE_CLASS = 'RedimapJob'
     
     def initialize
-      @logger = Redimap.logger
-      
       begin
         @redis = Redis.connect(:url => Redimap.config.redis_url)
         
         @redis.ping
       rescue Redis::CannotConnectError => e
-        @logger.error { e.to_s }
+        Redimap.logger.error { e.to_s }
         
         return
       end
