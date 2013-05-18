@@ -6,8 +6,8 @@ require 'securerandom'
 module Redimap
   class RedisConn
     
-    @@RESCUE_QUEUE = 'redimap'
-    @@RESCUE_CLASS = 'RedimapJob'
+    @@RESQUE_QUEUE = 'redimap'
+    @@RESQUE_CLASS = 'RedimapJob'
     
     def initialize
       begin
@@ -23,7 +23,7 @@ module Redimap
       @KEYS = {
         :redimap_mailboxes    => "#{Redimap.config.redis_ns_redimap}:mailboxes",
         :resque_queues        => "#{Redimap.config.redis_ns_queue}:queues",
-        :resque_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESCUE_QUEUE}",
+        :resque_queue_redimap => "#{Redimap.config.redis_ns_queue}:queue:#{@@RESQUE_QUEUE}",
       }.freeze
       
       if block_given?
@@ -46,7 +46,7 @@ module Redimap
     end
     
     def queue_mailbox_uid(mailbox, uid)
-      @redis.sadd(@KEYS[:resque_queues], @@RESCUE_QUEUE)
+      @redis.sadd(@KEYS[:resque_queues], @@RESQUE_QUEUE)
       
       @redis.rpush(@KEYS[:resque_queue_redimap], payload(mailbox, uid))
     end
@@ -56,10 +56,10 @@ module Redimap
     def payload(mailbox, uid)
       {
         # resque
-        :class => @@RESCUE_CLASS,
+        :class => @@RESQUE_CLASS,
         :args  => [mailbox, uid],
         # sidekiq (extra)
-        :queue => @@RESCUE_QUEUE,
+        :queue => @@RESQUE_QUEUE,
         :retry => true,
         :jid   => SecureRandom.hex(12),
       }.to_json
