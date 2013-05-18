@@ -1,6 +1,3 @@
-require 'json'
-
-
 module Redimap
   class Config
     
@@ -48,7 +45,7 @@ module Redimap
         :redis_ns_queue   => @redis_ns_queue,
         
         :polling_interval => @polling_interval,
-      }
+      }.to_s
     end
     
   end

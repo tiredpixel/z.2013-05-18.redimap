@@ -26,29 +26,9 @@ Most settings have defaults, but it is necessary to at least set up IMAP.
 
 Check and queue new messages and quit:
 
-    $ bundle exec redimap --host mail.example.com --user a@example.com --password helpimacarrot
+    $ bundle exec redimap --imap-host mail.example.com --imap-username a@example.com --imap-password helpimacarrot
 
-It is also possible to set config using environment variables. Command-line
-options override environment variables. Note that environment variables are in
-lowercase, and are named differently to command-line parameters.
-
-    $ imap_host=mail.example.com imap_user=a@example.com imap_password=helpimacarrot bundle exec redimap
-
-The complete list of available environment variables is:
-
-    eternal
-    log_level
-    imap_host
-    imap_port
-    imap_username
-    imap_password
-    imap_mailboxes
-    redis_url
-    redis_ns_redimap
-    redis_ns_queue
-    polling_interval
-
-Use `--eternal` or `eternal=1` to run eternally.
+Use `--eternal` to run eternally.
 
 
 ## Contributions
@@ -59,6 +39,17 @@ changes. Then send a pull request. Simples! If you'd like to discuss what you're
 doing or planning to do, or if you get stuck on something, then just wave. :)
 
 Do whatever makes you happy. We'll probably still like you. :)
+
+Tests are written using [minitest](https://github.com/seattlerb/minitest), which
+is included by default in Ruby 1.9 onwards. To run all tests in a pretty way:
+
+    ruby -rminitest/pride test/redimap.rb
+
+Or, if you're of that turn of mind, use [TURN](https://github.com/TwP/turn)
+(`gem install turn`):
+
+    turn test/redimap.rb
+
 
 ## Blessing
 
